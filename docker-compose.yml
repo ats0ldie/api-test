@@ -1,0 +1,34 @@
+#version: '3.8'
+services:
+  api:
+    build: .
+    restart: always
+    ports:
+      - "7030:7030"
+    command: node index.js
+    volumes:
+      # En Dockploy, es mejor manejar el SSL desde el panel y dejar que la app corra en HTTP.
+      # Descomenta la siguiente línea solo si tienes los certificados en el host y los necesitas dentro.
+      #- /etc/nginx/ssl:/app/ssl:ro
+      #- ./sftp_data:/var/sftp
+      - ./data:/var/www/html
+    environment:
+      - DB_HOST=${DB_HOST}         # Define variables de entorno para la conexión a la base de datos
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - DB_WEB_NAME=${DB_NAME_PO}
+      - DB_PORT=${DB_PORT}
+      # Variables para los scripts de Python (mapeadas a las de la API)
+      - DB_HOST_SFTP_CREATOR=${DB_HOST}
+      - DB_USER_SFTP_CREATOR=${DB_USER}
+      - DB_PASSWORD_SFTP_CREATOR=${DB_PASS}
+      - DB_NAME_SFTP_CREATOR=${DB_NAME}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - API_JOSKAR_URL=${API_JOSKAR_URL}
+      #- SSL_KEY_PATH=./ssl/privkey.pem  # Ruta dentro del contenedor para SSL
+      #- SSL_CERT_PATH=./ssl/fullchain.pem # Ruta dentro del contenedor para el certificado
+      #- CORS_ORIGIN=https:*
+      #- CORS_ORIGIN=https://www.drogueriajoskar.com  # Origen permitido para CORS
+      - TZ=America/Caracas  # Zona horaria

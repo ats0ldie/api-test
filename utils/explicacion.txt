@@ -1,0 +1,47 @@
+CONSIDERACIONES GENERALES
+==================================================================================================================================
+A.- Todos los campos numericos deben ir sin separadpr de miles y el caracter decimal es el (.) punto. Ej. 1971.00
+B.- Todos los campos numericos decimales deben tener 2 cifras decimales. Ej. 16.00
+C.- Los campos de texto se deben de filtrar todos los caracteres especiales, retorno de carros, salto de linea, letras acentuadas
+    la letra ñ y Ñ. 
+D.- los campos de fecha deben de tener el siguiente formato YYYY-MM-DD HH:MM:SS Ej. 2023-12-31 00:00:00
+E.- Se debe generar un archivo con nombre tp3_rif.txt en una ruta de ftp que se le asigne por ISB SISTEMAS
+    Y copiar el archivo con la frecuencia que ustedes consideren necesario recomendamos de 30 a 60 minutos
+F.- El caracter separador es el "|".
+
+HOST FTP : ftp.icompras360.net
+USUARIO : icompras360_309997807  
+CLAVE : Joskar309997807.**
+
+ 
+
+EXTRUCTURA DEL PEDIDO 
+============================================================================================================================
+PED + '-' +  CODCLI + '-' + ID + '-' + SEDE + '.txt'       =>          PED-#########-##-PR.txt
+============================================================================================================================
+0     1                    2   3     4         5          6  7    8 9 10   11   12   13   14   15   16    17
+----------------------------------------------------------------------------------------------------------------------------
+00001|MIOVIT TAB 30       |12 |45.00|PRINCIPAL|J404024212|10|0.00|0|P3|N|1.00|2.00|3.00|4.00|5.00|6.00|3.00|
+00002|ACETAMINOIFEN TAB 30|120|35.00|PRINCIPAL|J404024212|10|0.00|0|P3|N|1.00|2.00|3.00|4.00|5.00|6.00|3.00|
+00003|IBUPROFENO TAB 30   |1  |25.00|PRINCIPAL|J404024212|10|0.00|0|P3|N|1.00|2.00|3.00|4.00|5.00|6.00|3.00|
+00004|NAFAZOL GOTAS       |13 |58.00|PRINCIPAL|J404024212|10|0.00|0|P3|N|1.00|2.00|3.00|4.00|5.00|6.00|3.00|
+
+----------------------------------------------------------------------------------------------------------------------------
+0  -> CODPROD      : 0001                    (CODIGO DEL PRODUCTO)     
+1  -> DESPROD      : MIOVIT TAB 30           (DESCRIPCION DEL PRODUCTO)
+2  -> CANTIDAD     : 12                      (CANTIDAD SOLICITADA)
+3  -> PRECIO       : 45.00                   (PRECIO DE VENTA AL PUBLICO DEL PRODUCTO)
+4  -> SEDE         : PRINCIPAL               (SEDE DESTINO DEL PEDIDO)
+5  -> CODCLI       : J404024212              (CODIGO DEL CLIENTE, IDENTIFICADOR UNICO EN SU SISTEMA ERP)
+6  -> ID           : 10                      (IDENTIFICADOR DEL PEDIDO EN EL ICOMPRAS)
+7  -> DCT          : 0.00                    (DESCUENTO DEL CENTRO DE TRANSFERENCIA)
+8  -> DCREDITO     : 0                       (DIAS DE CREDITO DEL CENTRO DE TRANSFERENCIAS)
+9  -> ORIGEN       : P3                      (ORIGEN DEL PEDIDO, VALOR POR DEFECTO)
+10 -> TIPO PEDIDO  : N                       (TIPO DE PEDIDO, POR DEFECTO)
+11 -> DA           : 1.00                    (DESCUENTO ADCIONAL)
+12 -> DA2          : 2.00                    (DESCUENTO ADCIONAL 2)
+13 -> DV           : 3.00                    (DESCUENTO POR VOLUMEN DEL PRODUCTO)
+14 -> DP           : 4.00                    (DESCUENTO DE PRE-EMPAQUE)
+15 -> DN_CT        : 5.00                    (DESCUENTO NEGOCIADO POR EL CENTRO DE TRANSFERENCIA)
+16 -> DNV_CT       : 6.00                    (DESCUENTO NEGOCIADO POR VOLUMEN DEL CENTRO DE TRANSFERENCIA)
+17 -> DA3          : 3.00                    (DESCUENTO ADCIONALX PROVEEDOR DE TERCERO)
