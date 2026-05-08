@@ -1,6 +1,6 @@
 // 🔐 Utilidades de autenticación para el frontend
 
-const API_BASE_URL = 'https://jkserverom.drogueriajoskar.com:3000';
+const API_BASE_URL = 'https://testapi.drogueriajoskar.com:7030';
 
 // Función para autenticar al usuario y obtener token
 async function authenticateUser(email) {

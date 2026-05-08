@@ -13,7 +13,7 @@ Copia el contenido del archivo `webflow-auth.js` y pégalo en el `<head>` de tu 
 ```html
 <script>
 // 🔐 Utilidades de autenticación para Webflow
-const API_BASE_URL = 'https://jkserverom.drogueriajoskar.com:3000';
+const API_BASE_URL = 'https://testapi.drogueriajoskar.com:7030';
 
 // [Todo el código del archivo webflow-auth.js aquí]
 </script>
@@ -118,7 +118,7 @@ const data = await response.json();
 <head>
     <script>
         // 🔐 Utilidades de autenticación para Webflow
-        const API_BASE_URL = 'https://jkserverom.drogueriajoskar.com:3000';
+        const API_BASE_URL = 'https://testapi.drogueriajoskar.com:3000';
         
         // [Todo el código de webflow-auth.js aquí]
         

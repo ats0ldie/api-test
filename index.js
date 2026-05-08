@@ -101,5 +101,5 @@ app.use((err, req, res, next) => {
 
 // 🚀 Iniciar servidor HTTPS
 http.createServer(app).listen(port, () => {
-  console.log(`✅ API segura corriendo en: https://jkserverom.drogueriajoskar.com:${port} 🔒`);
+  console.log(`✅ API segura corriendo en: https://testapi.drogueriajoskar.com:${port} 🔒`);
 });
