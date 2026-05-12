@@ -312,7 +312,7 @@ export default function (pool) {
         const query = `
        SELECT 
         a.cod_cli, a.tipo_doc, a.fecha, a.transac, a.impuesto, a.num_ref, a.vence, a.numero, 
-        concat(IF(a.tipo_doc = 'ND' AND a.tipo_ref = 'NE' AND a.num_ref <> '', a.num_ref, a.numero ), a.tipo_doc) AS numeroc,
+        concat(a.tipo_doc,IF(a.tipo_doc = 'ND' AND a.tipo_ref = 'NE' AND a.num_ref <> '', a.num_ref, a.numero )) AS numeroc,
         IF(d.factura IS NULL, 'N', IF(e.operacion = 'C','C','S')) AS recla,
         a.abonos, b.cliente, b.nombre, b.rifci, a.id, 
         DATEDIFF(CURDATE(), a.vence) AS dv, 
