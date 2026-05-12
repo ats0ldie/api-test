@@ -319,7 +319,7 @@ export default function (pool) {
         a.monto * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS monto,
         (a.monto) * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS monto2, 
         (a.monto - a.abonos) * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS saldo, 
-        ROUND((a.monto - a.abonos) / a.dolarcambio, 2) * IF(a.tipo_doc IN ('AN','NC'), 1, -1) AS saldod,
+        ROUND((a.monto - a.abonos) / a.dolarcambio, 2) * IF(a.tipo_doc IN ('AN', 'NC'), -1, 1) AS saldod,
         (a.vence < CURDATE()) * (a.tipo_doc IN ('FC','ND')) AS vencida, 
         DATEDIFF(CURDATE(), a.vence) AS dias, 
         a.transac, 
