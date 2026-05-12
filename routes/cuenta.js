@@ -5,8 +5,8 @@ export default function (pool) {
 
     // Helper functions
     async function traevalor(pool, clave, descripcion, grupo = '') {
-        const query = grupo ? 
-            `SELECT valor FROM valores WHERE clave = ? AND grupo = ?` : 
+        const query = grupo ?
+            `SELECT valor FROM valores WHERE clave = ? AND grupo = ?` :
             `SELECT valor FROM valores WHERE clave = ?`;
         const params = grupo ? [clave, grupo] : [clave];
         try {
@@ -298,73 +298,42 @@ export default function (pool) {
         const rete = Math.round(smov.impuesto * 0.75 * 100) / 100;
         return rete;
     }
-  
-  // 📄 Obtener datos de un cliente por email
-  router.get('/by-email/:email', async (req, res) => {
-    const { email } = req.params;
 
-    // Validar formato de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Formato de email inválido' });
-    }
+    // 📄 Obtener datos de un cliente por email
+    router.get('/by-email/:email', async (req, res) => {
+        const { email } = req.params;
 
-    const query = `
-      SELECT 
-        a.cod_cli, a.tipo_doc, a.fecha, a.transac, a.impuesto, a.num_ref, a.vence, a.numero, 
-        IF(a.tipo_doc = 'ND' AND a.tipo_ref = 'NE' AND a.num_ref <> '', a.num_ref, a.numero ) AS numeroc,
-        IF(d.factura IS NULL, 'N', IF(e.operacion = 'C','C','S')) AS recla,
-        a.abonos, b.cliente, b.nombre, b.rifci, a.id, 
-        DATEDIFF(CURDATE(), a.vence) AS dv, 
-        a.monto * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS monto,
-        (a.monto) * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS monto2, 
-        (a.monto - a.abonos) * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS saldo, 
-        ROUND((a.monto - a.abonos) / a.dolarcambio, 2) * IF(a.tipo_doc IN ('AN','NC'), 1, -1) AS saldod,
-        (a.vence < CURDATE()) * (a.tipo_doc IN ('FC','ND')) AS vencida, 
-        DATEDIFF(CURDATE(), a.vence) AS dias, 
-        a.transac, 
-        IF(a.tipo_doc = 'ND' AND a.tipo_ref = 'NE', (SELECT entregado FROM snte WHERE numero = a.num_ref), c.entregado) AS entregado,
-        IF(c.sindescu IN ('S','X','M'), 'X', ' ') AS conjunto, 
-        a.id AS idsmov, 
-        IF(a.tipo_doc = 'ND' AND a.tipo_ref = 'NE' AND a.num_ref <> '', (SELECT id FROM snte WHERE numero = a.num_ref), c.id ) AS sfacid,
-        a.tipo_ref AS referenciadoc,
-        a.dolarcambio AS tasadevolu,
-        IF(a.tipo_doc='FC', IF(c.mfactura=1, 0, IF(c.mfactura>0, c.mfactura, b.mfactura)), IF(a.tipo_doc='ND', IF(f.mfactura=1, 0, IF(f.mfactura>0, f.mfactura, b.mfactura)), 0)) AS mfactura,
-        IF(a.tipo_doc='FC', IF(c.mfactura=1, 'Si', 'No'), IF(a.tipo_doc='ND', IF(f.mfactura=1, 'Si', 'No'), 'No')) AS indexado,
-        IF(a.tipo_doc = 'FC', IF(DATEDIFF(CURDATE(),a.vence) > 5, (((a.monto-a.abonos)/ a.dolarcambio)+ (a.montod*0.10)) , 0), 0) AS montodfull,
-        IF(a.tipo_doc = 'FC', IF(DATEDIFF(CURDATE(), a.vence) > 5, a.montod * 0.10, 0), 0) AS permul
-      FROM smov a 
-      JOIN scli b ON a.cod_cli = b.cliente 
-      LEFT JOIN sfac c ON a.transac = c.transac AND a.numero = c.numero
-      LEFT JOIN itrecla d ON c.numero = d.factura
-      LEFT JOIN recla e ON d.numero = e.numero
-      LEFT JOIN snte AS f ON a.num_ref = f.numero AND a.tipo_ref = 'NE'
-      WHERE a.abonos <> a.monto 
-        AND a.tipo_doc IN ('AN','FC','ND','GI','NC') 
-        AND b.email = ?
-      GROUP BY a.numero
-      ORDER BY a.tipo_doc, a.numero, vence
+        // Validar formato de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Formato de email inválido' });
+        }
+
+        const query = `
+      SELECT * FROM view_ecuenta a
+      JOIN scli b ON a.cod_cli = b.cliente
+      WHERE b.email = ?
     `;
 
-    try {
-      console.log(`[INFO] Buscando estado de cuenta para email: ${email}`);
-      const [results] = await pool.promise().query(query, [email]);
-      
-      // Compute additional fields
-      const fbanco = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-      for (let row of results) {
-        row.ppago = await calppago(pool, row.idsmov, fbanco);
-        row.difc = await caldifc(pool, row.idsmov, fbanco, row.ppago);
-        row.difpp = await difpp(pool, row.idsmov, fbanco);
-        row.rete = await calrete(pool, row.idsmov);
-      }
-      
-      res.json(results);
-    } catch (err) {
-      console.error('⚠️ Error consultando estado de cuenta:', err);
-      res.status(500).json({ error: 'Error al obtener el estado de cuenta', details: err.code });
-    }
-  });
-  
-  return router;
+        try {
+            console.log(`[INFO] Buscando estado de cuenta para email: ${email}`);
+            const [results] = await pool.promise().query(query, [email]);
+
+            // Compute additional fields
+            const fbanco = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+            for (let row of results) {
+                row.ppago = await calppago(pool, row.idsmov, fbanco);
+                row.difc = await caldifc(pool, row.idsmov, fbanco, row.ppago);
+                row.difpp = await difpp(pool, row.idsmov, fbanco);
+                row.rete = await calrete(pool, row.idsmov);
+            }
+
+            res.json(results);
+        } catch (err) {
+            console.error('⚠️ Error consultando estado de cuenta:', err);
+            res.status(500).json({ error: 'Error al obtener el estado de cuenta', details: err.code });
+        }
+    });
+
+    return router;
 }
