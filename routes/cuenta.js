@@ -40,10 +40,10 @@ export default function (pool) {
 
     async function tasafecha(pool, fecha) {
         // Assuming there's a table 'tasas' with fecha and tasa
-        const query = `SELECT tasa FROM tasas WHERE fecha <= ? ORDER BY fecha DESC LIMIT 1`;
+        const query = `SELECT oficial FROM monecam WHERE fecha <= ? ORDER BY fecha DESC LIMIT 1`;
         try {
             const [rows] = await pool.promise().query(query, [fecha]);
-            return rows.length > 0 ? rows[0].tasa : 1; // Default to 1 if no rate
+            return rows.length > 0 ? rows[0].oficial : 1; // Default to 1 if no rate
         } catch (err) {
             console.error('Error in tasafecha:', err);
             return 1;
@@ -346,6 +346,8 @@ export default function (pool) {
       GROUP BY a.numero
       ORDER BY a.tipo_doc, a.numero, vence
     `;
+
+
 
         try {
             console.log(`[INFO] Buscando estado de cuenta para email: ${email}`);
