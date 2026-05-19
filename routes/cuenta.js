@@ -319,7 +319,7 @@ export default function (pool) {
         a.monto * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS monto,
         (a.monto) * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS monto2, 
         (a.monto - a.abonos) * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS saldo, 
-        ROUND((a.monto - a.abonos) / a.dolarcambio, 2) * IF(a.tipo_doc IN ('AN', 'NC'), -1, 1) AS saldod,
+        (round((a.monto-a.abonos)/g.oficial,2) + IF(a.fecha >= '2025-12-01',IF(a.tipo_doc = 'FC',if(DATEDIFF(CURDATE(),a.vence) > 0,(a.monto/g.oficial)*0.10, 0),0),0)) * IF(a.tipo_doc IN ('AN','NC'),-1,1)  saldod,
         (a.vence < CURDATE()) * (a.tipo_doc IN ('FC','ND')) AS vencida, 
         DATEDIFF(CURDATE(), a.vence) AS dias, 
         a.transac, 
