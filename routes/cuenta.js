@@ -40,7 +40,7 @@ export default function (pool) {
 
     async function tasafecha(pool, fecha) {
         // Assuming there's a table 'tasas' with fecha and tasa
-        const query = `SELECT oficial FROM monecam WHERE fecha <= ? ORDER BY fecha DESC LIMIT 1`;
+        const query = `SELECT oficial FROM monecam WHERE fecha <= ? and moneda = 'USD' ORDER BY fecha DESC LIMIT 1`;
         try {
             const [rows] = await pool.promise().query(query, [fecha]);
             return rows.length > 0 ? rows[0].oficial : 1; // Default to 1 if no rate
