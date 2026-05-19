@@ -339,6 +339,7 @@ export default function (pool) {
       LEFT JOIN itrecla d ON c.numero = d.factura
       LEFT JOIN recla e ON d.numero = e.numero
       LEFT JOIN snte AS f ON a.num_ref = f.numero AND a.tipo_ref = 'NE'
+      LEFT JOIN monecam AS g ON a.fecha = g.fecha and g.moneda = 'USD'
       WHERE a.abonos <> a.monto 
         AND a.tipo_doc IN ('AN','FC','ND','GI','NC') 
         AND b.email = ?
