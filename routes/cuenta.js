@@ -267,7 +267,7 @@ export default function (pool) {
         const montobshoy = Math.round(monto * hoydolar / emidolar * 100) / 100;
 
         let difpp = 0;
-        if (smov.fecha >= '2025-12-01' && smov.dv > 0) {
+        if (smov.fecha >= '20251201' && smov.dv > 0) {
             difpp = montobshoy * 0.10;
         }
 
