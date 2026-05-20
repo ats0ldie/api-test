@@ -332,7 +332,7 @@ export default function (pool) {
         round((a.monto/g.oficial),2) * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS montod,
         (a.monto) * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS monto2, 
         (a.monto - a.abonos) * IF(a.tipo_doc IN ('AN','NC'), -1, 1) AS saldo, 
-        (round((a.monto-a.abonos)/g.oficial,2) + IF(a.fecha >= '2025-12-01',IF(a.tipo_doc = 'FC',if(DATEDIFF(CURDATE(),a.vence) > 0,(a.monto/g.oficial)*0.10, 0),0),0)) * IF(a.tipo_doc IN ('AN','NC'),-1,1)  saldod,
+        (round((a.monto-a.abonos)/g.oficial,2) + IF(a.fecha >= '2025-12-01',IF(a.tipo_doc = 'FC',if(DATEDIFF(CURDATE(),a.vence) > 0,round((a.monto/g.oficial)*0.10, 2),0),0),0)) * IF(a.tipo_doc IN ('AN','NC'),-1,1)  saldod,
         round(a.abonos/g.oficial,2) AS abonosd,
         (a.vence < CURDATE()) * (a.tipo_doc IN ('FC','ND')) AS vencida, 
         DATEDIFF(CURDATE(), a.vence) AS dias, 
