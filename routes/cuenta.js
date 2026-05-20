@@ -368,6 +368,7 @@ export default function (pool) {
             const [results] = await pool.promise().query(query, [email]);
 
             // Compute additional fields
+            const fbanco = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
             const chunkSize = 10;
             for (let i = 0; i < results.length; i += chunkSize) {
                 const chunk = results.slice(i, i + chunkSize);
