@@ -4,19 +4,26 @@ export default function (pool) {
     const router = express.Router();
 
     // Helper functions
+    const traevalorCache = new Map();
     async function traevalor(pool, clave, descripcion, grupo = '') {
+        const cacheKey = `${clave}_${grupo}`;
+        if (traevalorCache.has(cacheKey)) return traevalorCache.get(cacheKey);
+
         const query = grupo ?
             `SELECT valor FROM valores WHERE clave = ? AND grupo = ?` :
             `SELECT valor FROM valores WHERE clave = ?`;
         const params = grupo ? [clave, grupo] : [clave];
         try {
             const [rows] = await pool.promise().query(query, params);
-            return rows.length > 0 ? rows[0].valor : '';
+            const val = rows.length > 0 ? rows[0].valor : '';
+            traevalorCache.set(cacheKey, val);
+            return val;
         } catch (err) {
             console.error('Error in traevalor:', err);
             return '';
         }
     }
+
 
     async function damereg(pool, sql) {
         try {
@@ -38,12 +45,17 @@ export default function (pool) {
         }
     }
 
+    const tasafechaCache = new Map();
     async function tasafecha(pool, fecha) {
-        // Assuming there's a table 'tasas' with fecha and tasa
+        let fechaStr = fecha instanceof Date ? fecha.toISOString().split('T')[0] : String(fecha);
+        if (tasafechaCache.has(fechaStr)) return tasafechaCache.get(fechaStr);
+
         const query = `SELECT oficial FROM monecam WHERE fecha <= ? and moneda = 'USD' ORDER BY fecha DESC LIMIT 1`;
         try {
             const [rows] = await pool.promise().query(query, [fecha]);
-            return rows.length > 0 ? rows[0].oficial : 1; // Default to 1 if no rate
+            const val = rows.length > 0 ? rows[0].oficial : 1;
+            tasafechaCache.set(fechaStr, val);
+            return val;
         } catch (err) {
             console.error('Error in tasafecha:', err);
             return 1;
@@ -356,12 +368,15 @@ export default function (pool) {
             const [results] = await pool.promise().query(query, [email]);
 
             // Compute additional fields
-            const fbanco = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-            for (let row of results) {
-                row.ppago = await calppago(pool, row.idsmov, fbanco);
-                row.difc = await caldifc(pool, row.idsmov, fbanco, row.ppago);
-                row.difpp = await difpp(pool, row.idsmov, fbanco);
-                row.rete = await calrete(pool, row.idsmov);
+            const chunkSize = 10;
+            for (let i = 0; i < results.length; i += chunkSize) {
+                const chunk = results.slice(i, i + chunkSize);
+                await Promise.all(chunk.map(async (row) => {
+                    row.ppago = await calppago(pool, row.idsmov, fbanco);
+                    row.difc = await caldifc(pool, row.idsmov, fbanco, row.ppago);
+                    row.difpp = await difpp(pool, row.idsmov, fbanco);
+                    row.rete = await calrete(pool, row.idsmov);
+                }));
             }
 
             res.json(results);
