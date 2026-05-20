@@ -346,7 +346,7 @@ export default function (pool) {
         IF(a.tipo_doc='FC', IF(c.mfactura=1, 0, IF(c.mfactura>0, c.mfactura, b.mfactura)), IF(a.tipo_doc='ND', IF(f.mfactura=1, 0, IF(f.mfactura>0, f.mfactura, b.mfactura)), 0)) AS mfactura,
         IF(a.tipo_doc='FC', IF(c.mfactura=1, 'Si', 'No'), IF(a.tipo_doc='ND', IF(f.mfactura=1, 'Si', 'No'), 'No')) AS indexado,
         IF(a.tipo_doc = 'FC', IF(DATEDIFF(CURDATE(),a.vence) > 0, (((a.monto-a.abonos)/ a.dolarcambio)+ (a.montod*0.10)) , 0), 0) AS montodfull,
-        IF(a.tipo_doc = 'FC', IF(DATEDIFF(CURDATE(), a.vence) > 0, a.montod * 0.10, 0), 0) AS permul
+        IF(a.tipo_doc = 'FC', IF(DATEDIFF(CURDATE(), a.vence) > 0, round(a.montod * 0.10, 2), 0), 0) AS permul
       FROM smov a 
       JOIN scli b ON a.cod_cli = b.cliente 
       LEFT JOIN sfac c ON a.transac = c.transac AND a.numero = c.numero
