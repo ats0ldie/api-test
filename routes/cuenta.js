@@ -5,6 +5,7 @@ export default function (pool) {
 
     // Helper functions
     const traevalorCache = new Map();
+    setInterval(() => traevalorCache.clear(), 3600000);
     async function traevalor(pool, clave, descripcion, grupo = '') {
         const cacheKey = `${clave}_${grupo}`;
         if (traevalorCache.has(cacheKey)) return traevalorCache.get(cacheKey);
@@ -46,6 +47,8 @@ export default function (pool) {
     }
 
     const tasafechaCache = new Map();
+    setInterval(() => tasafechaCache.clear(), 3600000);
+
     async function tasafecha(pool, fecha) {
         let fechaStr = fecha instanceof Date ? fecha.toISOString().split('T')[0] : String(fecha);
         if (tasafechaCache.has(fechaStr)) return tasafechaCache.get(fechaStr);
