@@ -84,15 +84,13 @@ export default function (pool) {
 
     try {
       // INICIO CAMBIOS
-      // cargar en tabla datasisweb (wcli) 
+      // cargar en tabla datasisweb (wecli) 
       let connection;
       try {
         connection = await pool.promise().getConnection();
         await connection.beginTransaction();
-        // IMPORTANTE: Ajusta el nombre de la tabla ("datasisweb") y las columnas ("vendedor", "cliente", etc) 
-        // a los nombres exactos que utilizas en tu base de datos.
         const query = `
-          INSERT INTO wcli (vende, cliente, rif, facs, fbanco, monto, numero, tipo_op, banco, comenta, fecha)
+          INSERT INTO wecli (vende, cliente, rif, facs, fbanco, monto, numero, tipo_op, banco, comenta, fecha)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
         const values = [
