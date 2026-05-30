@@ -92,8 +92,8 @@ export default function (pool) {
         // IMPORTANTE: Ajusta el nombre de la tabla ("datasisweb") y las columnas ("vendedor", "cliente", etc) 
         // a los nombres exactos que utilizas en tu base de datos.
         const query = `
-          INSERT INTO wcli (vende, cliente, rif, facs, fbanco, monto, numero, tipo_op, banco, comenta, imgcomp, rete,fecha)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO wcli (vende, cliente, rif, facs, fbanco, monto, numero, tipo_op, banco, comenta, fecha)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
         const values = [
           vendedor || null,                // 1. vende
@@ -106,7 +106,7 @@ export default function (pool) {
           pago || null,                    // 8. tipo_op (tipo de pago)
           banco || null,                   // 9. banco
           nota || null,                    // 10. comenta (o podría ser tipoDescuento)
-          capturaFile ? capturaFile.originalname : null, // 11. imgcomp (el nombre de la imagen)
+          // capturaFile ? capturaFile.originalname : null, // 11. imgcomp (el nombre de la imagen)
           retencion || null,               // 12. rete
           new Date().toISOString().slice(0, 10) // 13. fecha (Asumiendo fecha actual de registro)
         ];
