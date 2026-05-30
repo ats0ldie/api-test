@@ -21,7 +21,7 @@ app.use(morgan('dev'));
 
 // 🔌 Pool de conexiones MySQL
 // Pool principal para 'datasis'
-const poolConfig = { 
+const poolConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
@@ -59,8 +59,8 @@ app.get('/health', async (req, res) => {
     res.status(200).json({ status: 'ok', message: 'API y base de datos operativas.' });
   } catch (err) {
     console.error('❌ Health check fallido:', err);
-    res.status(503).json({ 
-      status: 'error', 
+    res.status(503).json({
+      status: 'error',
       message: 'No se pudo establecer conexión con la base de datos.',
       details: {
         code: err.code,
@@ -83,7 +83,7 @@ app.use('/carrito', carritoRoute(pool));
 app.use('/empleados', empleadosRoute());
 app.use('/rq_cliente', rq_clienteRoute(pool));
 app.use('/devolucion', devolucionRoute);
-app.use('/cargar_pago', cargarPagoRoute); // Usar la nueva ruta
+app.use('/cargar_pago', cargarPagoRoute(poolWeb)); // Usar la nueva ruta con el pool
 app.use('/pedido', pedidoRoute(poolWeb)); // Usar el pool de 'datasisweb' para pedidos
 app.use('/cuenta', cuentaRoute(pool));
 
