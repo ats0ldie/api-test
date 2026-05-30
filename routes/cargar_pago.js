@@ -91,7 +91,7 @@ export default function (pool) {
         await connection.beginTransaction();
         const query = `
           INSERT INTO wecli (vende, cliente, rif, facs, fbanco, monto, numero, tipo_op, banco, comenta, fecha)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
         const values = [
           vendedor || null,                // 1. vende
