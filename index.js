@@ -78,6 +78,8 @@ import devolucionRoute from './routes/devolucion.js';
 import cargarPagoRoute from './routes/cargar_pago.js'; // Importar la nueva ruta
 import pedidoRoute from './routes/pedido.js';
 import cuentaRoute from './routes/cuenta.js';
+import clientesRoute from './routes/clientes.js';
+
 
 app.use('/carrito', carritoRoute(pool));
 app.use('/empleados', empleadosRoute());
@@ -86,6 +88,8 @@ app.use('/devolucion', devolucionRoute);
 app.use('/cargar_pago', cargarPagoRoute(poolWeb)); // Usar la nueva ruta con el pool
 app.use('/pedido', pedidoRoute(poolWeb)); // Usar el pool de 'datasisweb' para pedidos
 app.use('/cuenta', cuentaRoute(pool));
+app.use('/clientes', clientesRoute(pool));
+
 
 // 🛑 Manejo global de errores
 app.use((err, req, res, next) => {
