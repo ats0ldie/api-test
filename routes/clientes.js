@@ -14,7 +14,16 @@ export default function (pool) {
              deuda, tipoprecio 
       FROM v_cliente
     `;
-    pool.query(query, [parseInt(limit), parseInt(offset)], (err, results) => {
+    let params = [];
+    // Si recibimos texto a buscar, agregamos el filtro WHERE
+    if (q) {
+      query += ` WHERE nombres LIKE ? `;
+      params.push(`%${q}%`);
+    }
+    // Agregamos LIMIT y OFFSET y sus valores al arreglo de parámetros
+    query += ` LIMIT ? OFFSET ?`;
+    params.push(parseInt(limit), parseInt(offset));
+    pool.query(query, params, (err, results) => {
       if (err) {
         console.error('⚠️ Error consultando clientes:', err);
         return res.status(500).json({ error: 'Error en la consulta de clientes' });
