@@ -75,10 +75,9 @@ import carritoRoute from './routes/carrito.js';
 import empleadosRoute from './routes/empleados.js';
 import rq_clienteRoute from './routes/rq_cliente.js';
 import devolucionRoute from './routes/devolucion.js';
-import cargarPagoRoute from './routes/cargar_pago.js'; // Importar la nueva ruta
+import cargarPagoRoute from './routes/cargar_pago.js';
 import pedidoRoute from './routes/pedido.js';
 import cuentaRoute from './routes/cuenta.js';
-import clientesRoute from './routes/clientes.js';
 
 
 app.use('/carrito', carritoRoute(pool));
