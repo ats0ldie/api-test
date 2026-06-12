@@ -87,7 +87,6 @@ app.use('/devolucion', devolucionRoute);
 app.use('/cargar_pago', cargarPagoRoute(poolWeb)); // Usar la nueva ruta con el pool
 app.use('/pedido', pedidoRoute(poolWeb)); // Usar el pool de 'datasisweb' para pedidos
 app.use('/cuenta', cuentaRoute(pool));
-app.use('/clientes', clientesRoute(pool));
 
 
 // 🛑 Manejo global de errores
