@@ -1,28 +1,20 @@
-FROM node:22
+# Usar la imagen oficial de Bun en su versión Alpine (ligera)
+FROM oven/bun:alpine
 
-# Instalar utilidades del sistema y Python para los scripts auxiliares
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    sudo \
-    && rm -rf /var/lib/apt/lists/*
-
-# Instalar dependencias de Python usadas en los scripts
-RUN pip3 install mysql-connector-python openpyxl --break-system-packages
-
+# Definir directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de dependencias
+# Copiar archivos de configuración
 COPY package*.json ./
 
-# Instalar dependencias de Node.js
-RUN npm install
+# Instalar dependencias con Bun (rápido y sin bloqueos de seguridad nativos)
+RUN bun install
 
-# Copiar el código fuente
+# Copiar el resto del código del proyecto
 COPY . .
 
-# Exponer el puerto
-EXPOSE 7030
+# Exponer el puerto de tu API
+EXPOSE 3030
 
-# Iniciar la aplicación
-CMD ["node", "index.js"]
+# Ejecutar el script "start" de tu package.json usando Bun
+CMD ["bun", "run", "start"]
