@@ -14,7 +14,7 @@ RUN bun install
 COPY . .
 
 # Exponer el puerto de tu API
-EXPOSE 3030
+EXPOSE 7030
 
 # Ejecutar el script "start" de tu package.json usando Bun
 CMD ["bun", "run", "start"]
