@@ -12,9 +12,11 @@ export default function (pool) {
 
   const getSupabaseClient = () => {
     const supabaseUrl = process.env.SUPABASE_URL;
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
 
-    if (!supabaseUrl || !serviceRoleKey) return null;
+    if (!supabaseUrl || !serviceRoleKey) {
+      throw new Error('SUPABASE_SERVICE_ROLE_KEY/SUPABASE_SERVICE_KEY is required for Storage uploads');
+    }
 
     return createClient(supabaseUrl, serviceRoleKey, {
       auth: {
