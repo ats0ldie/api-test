@@ -203,7 +203,7 @@ export default function (pool) {
           nota || null,                    // 10. comenta
           imageUrl || (capturaFile ? capturaFile.originalname : null), // 11. imgcomp (el link o el nombre de la imagen)
           retencion || null,               // 12. rete
-          new Date().toISOString().slice(0, 10) // 13. fecha
+          
         ];
 
         await connection.execute(query, values);
