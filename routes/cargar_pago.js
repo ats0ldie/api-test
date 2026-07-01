@@ -41,6 +41,9 @@ export default function (pool) {
   };
 
   router.post('/', upload, async (req, res) => {
+    console.log('[cargar_pago] body:', req.body);
+    console.log('[cargar_pago] files:', (req.files || []).map((file) => ({ fieldname: file.fieldname, originalname: file.originalname })));
+
     const {
       vendedor, nombreFarmacia, rif, numFactura, monto,
       numReferencia, pago, fechaPago, banco, tipoDescuento, nota, retencion
