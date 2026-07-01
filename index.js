@@ -36,7 +36,7 @@ const pool = mysql.createPool(poolConfig);
 // Pool secundario para 'datasisweb' (solo para pedidos)
 const poolWebConfig = {
   ...poolConfig,
-  database: process.env.DB_WEB_NAME
+  database: process.env.DB_WEB_NAME || process.env.DB_NAME_PO || 'datasisweb'
 };
 const poolWeb = mysql.createPool(poolWebConfig);
 
