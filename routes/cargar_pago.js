@@ -11,8 +11,17 @@ export default function (pool) {
   const upload = multer({ storage: multer.memoryStorage() }).any();
 
   const getSupabaseClient = () => {
-    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) return null;
-    return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY;
+
+    if (!supabaseUrl || !serviceRoleKey) return null;
+
+    return createClient(supabaseUrl, serviceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false
+      }
+    });
   };
 
   const ensurePaymentTable = async () => {
@@ -73,6 +82,7 @@ export default function (pool) {
         .toString()
         .replace(/[^a-zA-Z0-9-_]/g, '');
 
+      const bucketName = process.env.SUPABASE_BUCKET_NAME || process.env.SUPABASE_BUCKET || 'pagosPortal';
       const supabase = getSupabaseClient();
 
       for (const file of capturaFiles) {
@@ -80,11 +90,14 @@ export default function (pool) {
         attachments.push({ filename: file.originalname, content: file.buffer });
 
         if (supabase) {
-          await supabase.storage.from('pagosPortal').upload(fileName, file.buffer, {
+          const { error } = await supabase.storage.from(bucketName).upload(fileName, file.buffer, {
             contentType: file.mimetype,
             upsert: true
           });
-          const { data } = supabase.storage.from('pagosPortal').getPublicUrl(fileName);
+
+          if (error) throw error;
+
+          const { data } = supabase.storage.from(bucketName).getPublicUrl(fileName);
           imageUrls.push(data.publicUrl);
         }
       }
@@ -94,11 +107,14 @@ export default function (pool) {
 
         if (supabase) {
           const fileName = `${cleanId}_retencion_${Date.now()}_${capturaRetencionFile.originalname.replace(/\s+/g, '_')}`;
-          await supabase.storage.from('pagosPortal').upload(fileName, capturaRetencionFile.buffer, {
+          const { error } = await supabase.storage.from(bucketName).upload(fileName, capturaRetencionFile.buffer, {
             contentType: capturaRetencionFile.mimetype,
             upsert: true
           });
-          const { data } = supabase.storage.from('pagosPortal').getPublicUrl(fileName);
+
+          if (error) throw error;
+
+          const { data } = supabase.storage.from(bucketName).getPublicUrl(fileName);
           retencionUrl = data.publicUrl;
         }
       }
