@@ -3,23 +3,34 @@ services:
   test-api:
     build: .
     restart: always
-    ports:
-      - "7030:7030"
-    command: node index.js
-    volumes:
-      # En Dockploy, es mejor manejar el SSL desde el panel y dejar que la app corra en HTTP.
-      # Descomenta la siguiente línea solo si tienes los certificados en el host y los necesitas dentro.
-      #- /etc/nginx/ssl:/app/ssl:ro
-      #- ./sftp_data:/var/sftp
-      - ./data:/var/www/html
+    image: test-api
+    container_name: test-api
+    # ELIMINA la línea de "ports" - Traefik no necesita que mapees puertos manualmente
+    # ports:
+    #   - "7030:7030"
+    command: bun run start
+    #networks:
+    #  - web # Asegúrate de que esté en la misma red donde está Traefik
+    labels:
+      - "traefik.enable=true"
+      # Define el dominio para esta API
+      - "traefik.http.routers.test-api.rule=Host(`testapi.drogueriajoskar.com`)"
+      # Define el entrypoint (ajusta a 'websecure' si usas HTTPS)
+      - "traefik.http.routers.test-api.entrypoints=websecure"
+      # Indica el puerto interno en el que tu app está escuchando (tu const port = 7030)
+      - "traefik.http.services.test-api.loadbalancer.server.port=7030"
+      # Si usas TLS/SSL con Traefik, activa tu resolver
+      - "traefik.http.routers.test-api.tls=true"
+      - "traefik.http.routers.test-api.tls.certresolver=myresolver" # Ajusta según tu nombre de resolver
     environment:
-      - DB_HOST=${DB_HOST}         # Define variables de entorno para la conexión a la base de datos
+      - TZ=America/Caracas
+      - PORT=7030                  
+      - DB_HOST=${DB_HOST}         
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
       - DB_WEB_NAME=${DB_NAME_PO}
       - DB_PORT=${DB_PORT}
-      # Variables para los scripts de Python (mapeadas a las de la API)
       - DB_HOST_SFTP_CREATOR=${DB_HOST}
       - DB_USER_SFTP_CREATOR=${DB_USER}
       - DB_PASSWORD_SFTP_CREATOR=${DB_PASS}
@@ -29,8 +40,9 @@ services:
       - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
       - API_JOSKAR_URL=${API_JOSKAR_URL}
-      #- SSL_KEY_PATH=./ssl/privkey.pem  # Ruta dentro del contenedor para SSL
-      #- SSL_CERT_PATH=./ssl/fullchain.pem # Ruta dentro del contenedor para el certificado
-      #- CORS_ORIGIN=https:*
-      #- CORS_ORIGIN=https://www.drogueriajoskar.com  # Origen permitido para CORS
-      - TZ=America/Caracas  # Zona horaria
+      #- CORS_ORIGIN=https://www.drogueriajoskar.com,https://cliente.drogueriajoskar.com,https://admin.drogueriajoskar.com,http://joskarerp.drogueriajoskar.com
+      - CORS_ORIGIN=*
+      - SSL_KEY_PATH=./ssl/privkey.pem  
+      - SSL_CERT_PATH=./ssl/fullchain.pem 
+
+      

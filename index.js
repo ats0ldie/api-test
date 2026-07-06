@@ -2,7 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import mysql from 'mysql2';
-import cors from 'cors'; // <-- Importación agregada
+import cors from 'cors';
 
 dotenv.config();
 
