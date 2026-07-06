@@ -7,7 +7,7 @@ import cors from 'cors'; // <-- Importación agregada
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3030;
+const port = process.env.PORT || 7030;
 
 // Configuración de CORS para permitir peticiones desde tu frontend
 app.use(cors({
