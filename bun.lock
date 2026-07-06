@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "api-joskar",
+      "name": "test-api-joskar",
       "dependencies": {
         "@supabase/supabase-js": "^2.110.0",
         "basic-ftp": "^5.3.1",
