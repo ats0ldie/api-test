@@ -5,23 +5,9 @@ services:
     restart: always
     image: test-api
     container_name: test-api
-    # ELIMINA la línea de "ports" - Traefik no necesita que mapees puertos manualmente
-    # ports:
-    #   - "7030:7030"
+    ports:
+      - "7030:7030"
     command: bun run start
-    #networks:
-    #  - web # Asegúrate de que esté en la misma red donde está Traefik
-    labels:
-      - "traefik.enable=true"
-      # Define el dominio para esta API
-      - "traefik.http.routers.test-api.rule=Host(`testapi.drogueriajoskar.com`)"
-      # Define el entrypoint (ajusta a 'websecure' si usas HTTPS)
-      - "traefik.http.routers.test-api.entrypoints=websecure"
-      # Indica el puerto interno en el que tu app está escuchando (tu const port = 7030)
-      - "traefik.http.services.test-api.loadbalancer.server.port=7030"
-      # Si usas TLS/SSL con Traefik, activa tu resolver
-      - "traefik.http.routers.test-api.tls=true"
-      - "traefik.http.routers.test-api.tls.certresolver=myresolver" # Ajusta según tu nombre de resolver
     environment:
       - TZ=America/Caracas
       - PORT=7030                  
