@@ -67,7 +67,7 @@ export default function (pool) {
       return res.status(400).json({ error: 'Faltan datos requeridos.' });
     }
 
-    const to = process.env.PAYMENT_EMAIL_TO || 'cobranzas2@drogueriajoskar.com';
+    const to = process.env.PAYMENT_EMAIL_TO || 'cobranzas@drogueriajoskar.com';
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: 465,
