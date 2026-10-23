@@ -7,17 +7,17 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.112.2",
+    "@supabase/supabase-js": "^2.118.0",
     "basic-ftp": "^5.3.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^16.6.1",
-    "express": "^4.22.2",
+    "express": "^4.22.3",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^9.0.3",
-    "morgan": "^1.11.0",
+    "morgan": "^1.12.1",
     "multer": "^1.4.5-lts.2",
-    "mysql2": "^3.23.3",
+    "mysql2": "^3.24.6",
     "nodemailer": "^7.0.13",
     "ssh2-sftp-client": "^12.1.1"
   }
